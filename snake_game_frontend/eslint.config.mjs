@@ -37,6 +37,13 @@ export default [
     languageOptions: {
       globals: {
         document: "readonly",
+        window: "readonly",
+        localStorage: "readonly",
+        requestAnimationFrame: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        AudioContext: "readonly",
+        webkitAudioContext: "readonly",
       },
     },
   },
