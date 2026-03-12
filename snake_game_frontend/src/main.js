@@ -571,16 +571,16 @@ function draw() {
   const offsetX = Math.floor((width - boardW) / 2)
   const offsetY = Math.floor((height - boardH) / 2)
 
-  // Background
-  ctx.fillStyle = '#070a0f'
+  // Background (slightly darker to increase perceived contrast)
+  ctx.fillStyle = '#05070b'
   ctx.fillRect(0, 0, width, height)
 
-  // Board
-  ctx.fillStyle = '#0b1220'
+  // Board (deeper tone so bright sprites "pop" against CRT glass)
+  ctx.fillStyle = '#07101d'
   ctx.fillRect(offsetX, offsetY, boardW, boardH)
 
-  // Grid lines (subtle)
-  ctx.strokeStyle = 'rgba(59, 130, 246, 0.10)'
+  // Grid lines (still subtle, but a touch stronger for clarity)
+  ctx.strokeStyle = 'rgba(78, 161, 255, 0.14)'
   ctx.lineWidth = 1
   ctx.beginPath()
   for (let x = 0; x <= GRID_COLS; x += 1) {
@@ -595,16 +595,16 @@ function draw() {
   }
   ctx.stroke()
 
-  // Food (glow)
+  // Food (high-contrast amber "phosphor" with glow)
   const foodX = offsetX + food.x * cell
   const foodY = offsetY + food.y * cell
-  ctx.fillStyle = '#06b6d4'
-  ctx.shadowColor = 'rgba(6, 182, 212, 0.55)'
-  ctx.shadowBlur = 10
+  ctx.fillStyle = '#ffd54a'
+  ctx.shadowColor = 'rgba(255, 213, 74, 0.65)'
+  ctx.shadowBlur = 14
   ctx.fillRect(foodX + 2, foodY + 2, cell - 4, cell - 4)
   ctx.shadowBlur = 0
 
-  // Snake
+  // Snake (bright phosphor green for maximum contrast vs blue/cyan CRT accents)
   for (let i = snake.length - 1; i >= 0; i -= 1) {
     const seg = snake[i]
     const x = offsetX + seg.x * cell
@@ -612,28 +612,28 @@ function draw() {
 
     const isHead = i === 0
     if (isHead) {
-      ctx.fillStyle = '#3b82f6'
-      ctx.shadowColor = 'rgba(59, 130, 246, 0.45)'
-      ctx.shadowBlur = 10
+      ctx.fillStyle = '#7CFF6B'
+      ctx.shadowColor = 'rgba(124, 255, 107, 0.55)'
+      ctx.shadowBlur = 14
     } else {
-      ctx.fillStyle = 'rgba(59, 130, 246, 0.75)'
+      ctx.fillStyle = 'rgba(124, 255, 107, 0.78)'
       ctx.shadowBlur = 0
     }
 
     ctx.fillRect(x + 2, y + 2, cell - 4, cell - 4)
 
     if (isHead) {
-      // Little "eye" pixel for retro vibe
+      // Little "eye" pixel for retro vibe (warm white to stand out from green head)
       ctx.shadowBlur = 0
-      ctx.fillStyle = '#e2e8f0'
+      ctx.fillStyle = '#fff7ed'
       const eyeX = x + Math.floor(cell * 0.62)
       const eyeY = y + Math.floor(cell * 0.30)
       ctx.fillRect(eyeX, eyeY, Math.max(2, Math.floor(cell * 0.12)), Math.max(2, Math.floor(cell * 0.12)))
     }
   }
 
-  // Border
-  ctx.strokeStyle = 'rgba(6, 182, 212, 0.35)'
+  // Border (slightly stronger for separation)
+  ctx.strokeStyle = 'rgba(33, 240, 209, 0.42)'
   ctx.lineWidth = 2
   ctx.strokeRect(offsetX + 1, offsetY + 1, boardW - 2, boardH - 2)
 }
