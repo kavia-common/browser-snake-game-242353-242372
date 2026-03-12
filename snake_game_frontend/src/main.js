@@ -604,33 +604,47 @@ function draw() {
   ctx.fillRect(foodX + 2, foodY + 2, cell - 4, cell - 4)
   ctx.shadowBlur = 0
 
-  // Snake (bright phosphor green for maximum contrast vs blue/cyan CRT accents)
+  // Snake (extra-bright phosphor green + stronger glow/edge highlight for higher contrast)
   for (let i = snake.length - 1; i >= 0; i -= 1) {
     const seg = snake[i]
     const x = offsetX + seg.x * cell
     const y = offsetY + seg.y * cell
 
     const isHead = i === 0
+
+    // Keep geometry consistent, just boost brightness via color + glow + subtle outline.
+    // Note: we explicitly reset shadowBlur for body segments so food glow doesn't "leak".
     if (isHead) {
-      ctx.fillStyle = '#7CFF6B'
-      ctx.shadowColor = 'rgba(124, 255, 107, 0.55)'
-      ctx.shadowBlur = 14
+      ctx.fillStyle = '#B7FF9E' // brighter head core
+      ctx.shadowColor = 'rgba(124, 255, 107, 0.85)'
+      ctx.shadowBlur = 22
     } else {
-      ctx.fillStyle = 'rgba(124, 255, 107, 0.78)'
-      ctx.shadowBlur = 0
+      ctx.fillStyle = 'rgba(124, 255, 107, 0.92)' // brighter body fill
+      ctx.shadowColor = 'rgba(124, 255, 107, 0.45)'
+      ctx.shadowBlur = 10
     }
 
+    // Core cell fill
     ctx.fillRect(x + 2, y + 2, cell - 4, cell - 4)
 
+    // Crisp inner outline to increase perceived contrast (especially on bright glows).
+    // Use a subtle warm/white-green highlight for the head.
+    ctx.shadowBlur = 0
+    ctx.lineWidth = 2
+    ctx.strokeStyle = isHead ? 'rgba(245, 255, 235, 0.65)' : 'rgba(230, 255, 220, 0.28)'
+    ctx.strokeRect(x + 2.5, y + 2.5, cell - 5, cell - 5)
+
     if (isHead) {
-      // Little "eye" pixel for retro vibe (warm white to stand out from green head)
-      ctx.shadowBlur = 0
-      ctx.fillStyle = '#fff7ed'
+      // Little "eye" pixel for retro vibe (slightly brighter for readability)
+      ctx.fillStyle = '#ffffff'
       const eyeX = x + Math.floor(cell * 0.62)
       const eyeY = y + Math.floor(cell * 0.30)
       ctx.fillRect(eyeX, eyeY, Math.max(2, Math.floor(cell * 0.12)), Math.max(2, Math.floor(cell * 0.12)))
     }
   }
+
+  // Safety: ensure we don't accidentally keep a shadow active for subsequent strokes.
+  ctx.shadowBlur = 0
 
   // Border (slightly stronger for separation)
   ctx.strokeStyle = 'rgba(33, 240, 209, 0.42)'
